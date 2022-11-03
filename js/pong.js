@@ -11,7 +11,6 @@ function getViewportSize() {
         viewportWidth: $(window).width(),
         viewportHeight: $(window).height()
     };
-    
     return viewportSize;
 }
 
@@ -22,6 +21,4 @@ function setup() {
 
 function draw() {
     let viewportSize = getViewportSize();
-    console.log(viewportSize);
-    sleep(1000);
 }
