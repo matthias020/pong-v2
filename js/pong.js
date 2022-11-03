@@ -21,7 +21,7 @@ function setup() {
 }
 
 function draw() {
-    viewportSize = getViewportSize();
+    let viewportSize = getViewportSize();
     console.log(viewportSize);
     sleep(1000);
 }
