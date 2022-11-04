@@ -93,6 +93,14 @@ function drawButton(buttonX,
                     textFontOwn, 
                     textOwn) {
 
+  if (mouseX > buttonX 
+      && mouseX < buttonX + buttonWidth 
+      && mouseY > buttonY 
+      && mouseY < buttonY + buttonHeight) {
+    
+    console.log("inside");
+  };
+
   fill(buttonColor);
   rect(buttonX, buttonY, buttonWidth, buttonHeight, buttonCornerRadius);
   fill(textColor);
@@ -116,7 +124,11 @@ function start(viewportSize, logo) {
   let buttonX = viewportSize.width / 2 - buttonWidth / 2;
   let buttonY = viewportSize.height / 4 * 3 - buttonHeight / 2;
   let buttonColor = color(255);
-  let buttonColorHover = 0;
+  let buttonColorHover = {
+    r: 175,
+    g: 175,
+    b: 175
+  };
   let buttonCornerRadius = 10;
   let textColor = color(0);
   let textColorHover = 0;
