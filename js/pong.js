@@ -1,3 +1,7 @@
+let logoOpacity = 0;
+let clickCounter = 0;
+//let fpsCount = 0;
+
 let atari;
 let logo;
 function preload() {
@@ -39,7 +43,41 @@ function drawCenterLine(centerBlockSize, viewportSize) {
   while (currentBlockY < viewportSize.height) {
     rect(centerLineX, currentBlockY, centerBlockSize.width, centerBlockSize.height);
     currentBlockY = currentBlockY + centerBlockSize.height * 2;
-  }
+  };
+}
+
+function showLogo(logo, 
+                  logoX, 
+                  logoY, 
+                  logoSize, 
+                  logoMiddleX, 
+                  logoMiddleY) {
+
+  image(logo, logoX, logoY, logoSize, logoSize);
+  
+  let logoURL = "https://github.com/matthias020/pong-v2/";
+
+  if (dist(mouseX, mouseY, logoMiddleX, logoMiddleY) < logoSize / 2) {
+    if (mouseIsPressed == true && mouseButton == LEFT) {
+      if (clickCounter > 15) {
+        window.open(logoURL, '_blank').focus();
+        clickCounter = 0;
+        mouseIsPressed = false;
+      };      
+    };
+
+    if (logoOpacity < 80) {
+      logoOpacity = logoOpacity + 5;
+    };
+
+  } else {
+    if (logoOpacity > 0) {
+      logoOpacity = logoOpacity - 5;
+    };
+  };
+
+  fill(0, 0, 0, logoOpacity);
+  circle(logoMiddleX, logoMiddleY, logoSize);
 }
 
 function drawButton(buttonX, 
@@ -60,17 +98,18 @@ function drawButton(buttonX,
   fill(textColor);
   textFont(textFontOwn);
   textSize(textSizeOwn);
-  textAlign(CENTER, CENTER)
+  textAlign(CENTER, CENTER);
   text(textOwn, buttonX, buttonY, buttonWidth, buttonHeight);
 }
+
 function start(viewportSize, logo) {
-  //logoSize = viewportSize.height / 8 * 2.3;
-  //logoSize = viewportSize.width / 8;
-  logoSize = viewportSize.totalSqrt / 5.33284526805;
-  //console.log(viewportSize.total);
-  logoX = viewportSize.width / 2 - logoSize / 2;
-  logoY = viewportSize.height / 3 - logoSize / 2;
-  image(logo, logoX, logoY, logoSize, logoSize);
+  let logoSize = viewportSize.totalSqrt / 5.5;
+  let logoX = viewportSize.width / 2 - logoSize / 2;
+  let logoY = viewportSize.height / 3 - logoSize / 2;
+  let logoMiddleX = viewportSize.width / 2;
+  let logoMiddleY = viewportSize.height / 3;
+  clickCounter++;
+  showLogo(logo, logoX, logoY, logoSize, logoMiddleX, logoMiddleY);
 
   let buttonWidth = viewportSize.width / 4;
   let buttonHeight = viewportSize.height / 6;
@@ -81,8 +120,7 @@ function start(viewportSize, logo) {
   let buttonCornerRadius = 10;
   let textColor = color(0);
   let textColorHover = 0;
-  //let textSizeOwn = viewportSize.width / 25;
-  let textSizeOwn = viewportSize.totalSqrt / 16.6651414627;
+  let textSizeOwn = viewportSize.totalSqrt / 16.5;
   let textFontOwn = atari;
   let textOwn = "Start";
   drawButton(buttonX, 
@@ -100,10 +138,6 @@ function start(viewportSize, logo) {
 }
 
 
-function setup() {
-
-}
-
 function draw() {
   clear();
 
@@ -114,6 +148,13 @@ function draw() {
   let shapeColor = color(255);
   fill(shapeColor);
   noStroke();
+
+  //fpsCount++;
+  //let fps = frameRate();
+  //if (fpsCount == 20) {
+  //  text("FPS: " + fps.toFixed(2), 10, height - 50);
+  //  fpsCount = 0;
+  //};
 
   let centerBlockSize = getCenterBlockSize(viewportSize);
   drawCenterLine(centerBlockSize, viewportSize);
