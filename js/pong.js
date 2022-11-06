@@ -91,7 +91,7 @@ function drawButton(buttonX,
                     textOwn,
                     amountFramesPerShift) {
 
-  let colorShiftPerFrame = {
+  let buttonColorShiftPerFrame = {
     r: (buttonColorHoverLoose.r - buttonColorOriginalLoose.r) / amountFramesPerShift,
     g: (buttonColorHoverLoose.g - buttonColorOriginalLoose.g) / amountFramesPerShift,
     b: (buttonColorHoverLoose.b - buttonColorOriginalLoose.b) / amountFramesPerShift
@@ -112,14 +112,17 @@ function drawButton(buttonX,
   };
 
   buttonColorLoose = {
-    r: buttonColorOriginalLoose.r + colorShiftPerFrame.r * frameShiftNumber,
-    g: buttonColorOriginalLoose.g + colorShiftPerFrame.g * frameShiftNumber,
-    b: buttonColorOriginalLoose.b + colorShiftPerFrame.b * frameShiftNumber
+    r: buttonColorOriginalLoose.r + buttonColorShiftPerFrame.r * frameShiftNumber,
+    g: buttonColorOriginalLoose.g + buttonColorShiftPerFrame.g * frameShiftNumber,
+    b: buttonColorOriginalLoose.b + buttonColorShiftPerFrame.b * frameShiftNumber
   };
   let buttonColor = color(buttonColorLoose.r, buttonColorLoose.g, buttonColorLoose.b);
-  
+
   fill(buttonColor);
   rect(buttonX, buttonY, buttonWidth, buttonHeight, buttonCornerRadius);
+
+
+
   fill(textColor);
   textFont(textFontOwn);
   textSize(textSizeOwn);
