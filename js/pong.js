@@ -52,27 +52,25 @@ function showLogo(logo,
                   logoY, 
                   logoSize, 
                   logoMiddleX, 
-                  logoMiddleY) {
+                  logoMiddleY,
+                  logoURL) {
 
   image(logo, logoX, logoY, logoSize, logoSize);
   
-  let logoURL = "https://github.com/matthias020/pong-v2/";
-
   if (dist(mouseX, mouseY, logoMiddleX, logoMiddleY) < logoSize / 2) {
-    if (mouseIsPressed == true && mouseButton == LEFT) {
-      if (clickCounter > 15) {
-        window.open(logoURL, '_blank').focus();
-        clickCounter = 0;
-        mouseIsPressed = false;
-      };      
+    if (mouseIsPressed == true && mouseButton == LEFT && clickCounter > 15) {
+      window.open(logoURL, '_blank').focus();
+      clickCounter = 0;
+      mouseIsPressed = false;
     };
 
     if (logoOpacity < 80) {
       logoOpacity = logoOpacity + 5;
     };
-
-  } else if (logoOpacity > 0) {
-    logoOpacity = logoOpacity - 5;
+  } else {
+    if (logoOpacity > 0) {
+      logoOpacity = logoOpacity - 5;
+    };
   };
 
   fill(0, 0, 0, logoOpacity);
@@ -104,12 +102,13 @@ function drawButton(buttonX,
       && mouseY > buttonY 
       && mouseY < buttonY + buttonHeight) {
     
-    console.log("inside");
     if (frameShiftNumber < amountFramesPerShift) {
       frameShiftNumber++;
     };
-  } else if (frameShiftNumber > 0) {
-    frameShiftNumber--;
+  } else {
+    if (frameShiftNumber > 0) {
+      frameShiftNumber--;
+    };
   };
 
   buttonColorLoose = {
@@ -117,8 +116,8 @@ function drawButton(buttonX,
     g: buttonColorOriginalLoose.g + colorShiftPerFrame.g * frameShiftNumber,
     b: buttonColorOriginalLoose.b + colorShiftPerFrame.b * frameShiftNumber
   };
-
   let buttonColor = color(buttonColorLoose.r, buttonColorLoose.g, buttonColorLoose.b);
+  
   fill(buttonColor);
   rect(buttonX, buttonY, buttonWidth, buttonHeight, buttonCornerRadius);
   fill(textColor);
@@ -134,8 +133,9 @@ function start(viewportSize, logo) {
   let logoY = viewportSize.height / 3 - logoSize / 2;
   let logoMiddleX = viewportSize.width / 2;
   let logoMiddleY = viewportSize.height / 3;
+  let logoURL = "https://github.com/matthias020/pong-v2/";
   clickCounter++;
-  showLogo(logo, logoX, logoY, logoSize, logoMiddleX, logoMiddleY);
+  showLogo(logo, logoX, logoY, logoSize, logoMiddleX, logoMiddleY, logoURL);
 
   let buttonWidth = viewportSize.width / 4;
   let buttonHeight = viewportSize.height / 6;
