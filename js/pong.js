@@ -71,10 +71,8 @@ function showLogo(logo,
       logoOpacity = logoOpacity + 5;
     };
 
-  } else {
-    if (logoOpacity > 0) {
-      logoOpacity = logoOpacity - 5;
-    };
+  } else if (logoOpacity > 0) {
+    logoOpacity = logoOpacity - 5;
   };
 
   fill(0, 0, 0, logoOpacity);
@@ -85,8 +83,8 @@ function drawButton(buttonX,
                     buttonY, 
                     buttonWidth, 
                     buttonHeight, 
-                    buttonColorOriginal, 
-                    buttonColorHover, 
+                    buttonColorOriginalLoose, 
+                    buttonColorHoverLoose, 
                     buttonCornerRadius, 
                     textColor, 
                     textColorHover, 
@@ -94,11 +92,11 @@ function drawButton(buttonX,
                     textFontOwn, 
                     textOwn,
                     amountFramesPerShift) {
-  
+
   let colorShiftPerFrame = {
-    r: (buttonColorHover.r - buttonColorOriginal.r) / amountFramesPerShift,
-    g: (buttonColorHover.g - buttonColorOriginal.g) / amountFramesPerShift,
-    b: (buttonColorHover.b - buttonColorOriginal.b) / amountFramesPerShift
+    r: (buttonColorHoverLoose.r - buttonColorOriginalLoose.r) / amountFramesPerShift,
+    g: (buttonColorHoverLoose.g - buttonColorOriginalLoose.g) / amountFramesPerShift,
+    b: (buttonColorHoverLoose.b - buttonColorOriginalLoose.b) / amountFramesPerShift
   };
 
   if (mouseX > buttonX 
@@ -107,15 +105,20 @@ function drawButton(buttonX,
       && mouseY < buttonY + buttonHeight) {
     
     console.log("inside");
-    while (frameShiftNumber < amountFramesPerShift) {
-      var buttonColor = {
-        r: buttonColorOriginal.r + colorShiftPerFrame.r * amountFramesPerShift,
-        g: buttonColorOriginal.g + colorShiftPerFrame.g * amountFramesPerShift,
-        b: buttonColorOriginal.b + colorShiftPerFrame.b * amountFramesPerShift
-      };
-    }
+    if (frameShiftNumber < amountFramesPerShift) {
+      frameShiftNumber++;
+    };
+  } else if (frameShiftNumber > 0) {
+    frameShiftNumber--;
   };
 
+  buttonColorLoose = {
+    r: buttonColorOriginalLoose.r + colorShiftPerFrame.r * frameShiftNumber,
+    g: buttonColorOriginalLoose.g + colorShiftPerFrame.g * frameShiftNumber,
+    b: buttonColorOriginalLoose.b + colorShiftPerFrame.b * frameShiftNumber
+  };
+
+  let buttonColor = color(buttonColorLoose.r, buttonColorLoose.g, buttonColorLoose.b);
   fill(buttonColor);
   rect(buttonX, buttonY, buttonWidth, buttonHeight, buttonCornerRadius);
   fill(textColor);
@@ -138,12 +141,12 @@ function start(viewportSize, logo) {
   let buttonHeight = viewportSize.height / 6;
   let buttonX = viewportSize.width / 2 - buttonWidth / 2;
   let buttonY = viewportSize.height / 4 * 3 - buttonHeight / 2;
-  let buttonColorOriginal = {
+  let buttonColorOriginalLoose = {
     r: 255,
     g: 255,
     b: 255
   };
-  let buttonColorHover = {
+  let buttonColorHoverLoose = {
     r: 175,
     g: 175,
     b: 175
@@ -159,8 +162,8 @@ function start(viewportSize, logo) {
             buttonY, 
             buttonWidth, 
             buttonHeight, 
-            buttonColorOriginal, 
-            buttonColorHover, 
+            buttonColorOriginalLoose, 
+            buttonColorHoverLoose, 
             buttonCornerRadius, 
             textColor, 
             textColorHover, 
