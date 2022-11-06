@@ -1,5 +1,6 @@
 let logoOpacity = 0;
 let clickCounter = 0;
+let frameShiftNumber = 0;
 //let fpsCount = 0;
 
 let atari;
@@ -84,14 +85,21 @@ function drawButton(buttonX,
                     buttonY, 
                     buttonWidth, 
                     buttonHeight, 
-                    buttonColor, 
+                    buttonColorOriginal, 
                     buttonColorHover, 
                     buttonCornerRadius, 
                     textColor, 
                     textColorHover, 
                     textSizeOwn, 
                     textFontOwn, 
-                    textOwn) {
+                    textOwn,
+                    amountFramesPerShift) {
+  
+  let colorShiftPerFrame = {
+    r: (buttonColorHover.r - buttonColorOriginal.r) / amountFramesPerShift,
+    g: (buttonColorHover.g - buttonColorOriginal.g) / amountFramesPerShift,
+    b: (buttonColorHover.b - buttonColorOriginal.b) / amountFramesPerShift
+  };
 
   if (mouseX > buttonX 
       && mouseX < buttonX + buttonWidth 
@@ -99,6 +107,13 @@ function drawButton(buttonX,
       && mouseY < buttonY + buttonHeight) {
     
     console.log("inside");
+    while (frameShiftNumber < amountFramesPerShift) {
+      var buttonColor = {
+        r: buttonColorOriginal.r + colorShiftPerFrame.r * amountFramesPerShift,
+        g: buttonColorOriginal.g + colorShiftPerFrame.g * amountFramesPerShift,
+        b: buttonColorOriginal.b + colorShiftPerFrame.b * amountFramesPerShift
+      };
+    }
   };
 
   fill(buttonColor);
@@ -123,7 +138,11 @@ function start(viewportSize, logo) {
   let buttonHeight = viewportSize.height / 6;
   let buttonX = viewportSize.width / 2 - buttonWidth / 2;
   let buttonY = viewportSize.height / 4 * 3 - buttonHeight / 2;
-  let buttonColor = color(255);
+  let buttonColorOriginal = {
+    r: 255,
+    g: 255,
+    b: 255
+  };
   let buttonColorHover = {
     r: 175,
     g: 175,
@@ -135,18 +154,20 @@ function start(viewportSize, logo) {
   let textSizeOwn = viewportSize.totalSqrt / 16.5;
   let textFontOwn = atari;
   let textOwn = "Start";
+  let amountFramesPerShift = 16;
   drawButton(buttonX, 
             buttonY, 
             buttonWidth, 
             buttonHeight, 
-            buttonColor, 
+            buttonColorOriginal, 
             buttonColorHover, 
             buttonCornerRadius, 
             textColor, 
             textColorHover, 
             textSizeOwn, 
             textFontOwn, 
-            textOwn);
+            textOwn,
+            amountFramesPerShift);
 }
 
 
