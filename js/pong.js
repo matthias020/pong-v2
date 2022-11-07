@@ -84,8 +84,8 @@ function drawButton(buttonX,
                     buttonColorOriginalLoose, 
                     buttonColorHoverLoose, 
                     buttonCornerRadius, 
-                    textColor, 
-                    textColorHover, 
+                    textColorOriginalLoose, 
+                    textColorHoverLoose, 
                     textSizeOwn, 
                     textFontOwn, 
                     textOwn,
@@ -95,6 +95,11 @@ function drawButton(buttonX,
     r: (buttonColorHoverLoose.r - buttonColorOriginalLoose.r) / amountFramesPerShift,
     g: (buttonColorHoverLoose.g - buttonColorOriginalLoose.g) / amountFramesPerShift,
     b: (buttonColorHoverLoose.b - buttonColorOriginalLoose.b) / amountFramesPerShift
+  };
+  let textColorShiftPerFrame = {
+    r: (textColorHoverLoose.r - textColorOriginalLoose.r) / amountFramesPerShift,
+    g: (textColorHoverLoose.g - textColorOriginalLoose.g) / amountFramesPerShift,
+    b: (textColorHoverLoose.b - textColorOriginalLoose.b) / amountFramesPerShift
   };
 
   if (mouseX > buttonX 
@@ -111,18 +116,21 @@ function drawButton(buttonX,
     };
   };
 
-  buttonColorLoose = {
+  let buttonColorLoose = {
     r: buttonColorOriginalLoose.r + buttonColorShiftPerFrame.r * frameShiftNumber,
     g: buttonColorOriginalLoose.g + buttonColorShiftPerFrame.g * frameShiftNumber,
     b: buttonColorOriginalLoose.b + buttonColorShiftPerFrame.b * frameShiftNumber
   };
   let buttonColor = color(buttonColorLoose.r, buttonColorLoose.g, buttonColorLoose.b);
+  let textColorLoose = {
+    r: textColorOriginalLoose.r + textColorShiftPerFrame.r * frameShiftNumber,
+    g: textColorOriginalLoose.g + textColorShiftPerFrame.g * frameShiftNumber,
+    b: textColorOriginalLoose.b + textColorShiftPerFrame.b * frameShiftNumber
+  };
+  let textColor = color(textColorLoose.r, textColorLoose.g, textColorLoose.b);
 
   fill(buttonColor);
   rect(buttonX, buttonY, buttonWidth, buttonHeight, buttonCornerRadius);
-
-
-
   fill(textColor);
   textFont(textFontOwn);
   textSize(textSizeOwn);
@@ -150,13 +158,21 @@ function start(viewportSize, logo) {
     b: 255
   };
   let buttonColorHoverLoose = {
-    r: 175,
-    g: 175,
-    b: 175
+    r: 0,
+    g: 0,
+    b: 0
   };
   let buttonCornerRadius = 10;
-  let textColor = color(0);
-  let textColorHover = 0;
+  let textColorOriginalLoose = {
+    r: 0,
+    g: 0,
+    b: 0
+  };
+  let textColorHoverLoose = {
+    r: 255,
+    g: 255,
+    b: 255
+  };
   let textSizeOwn = viewportSize.totalSqrt / 16.5;
   let textFontOwn = atari;
   let textOwn = "Start";
@@ -168,8 +184,8 @@ function start(viewportSize, logo) {
             buttonColorOriginalLoose, 
             buttonColorHoverLoose, 
             buttonCornerRadius, 
-            textColor, 
-            textColorHover, 
+            textColorOriginalLoose, 
+            textColorHoverLoose, 
             textSizeOwn, 
             textFontOwn, 
             textOwn,
