@@ -2,8 +2,9 @@ let logoOpacity = 0;
 let clickCounter = 0;
 let frameShiftNumber = 0;
 let goTo = "preStart";
-let amountFramesPerShift = 16;
 let currentFrameInTransparencyChange = 1;
+let amountFramesPerShiftFade = 8;
+let amountFramesPerShiftElse = 16;
 //let fpsCount = 0;
 
 let atari;
@@ -61,14 +62,14 @@ function showLogo(logo,
   
   tint(255, 255)
   if (duringTransition == "fadeIn") {
-    let imageOpacityChangePerFrame = 255 / amountFramesPerShift;
+    let imageOpacityChangePerFrame = 255 / amountFramesPerShiftFade; //
     let currentOpacity = 0 + currentFrameInTransparencyChange * imageOpacityChangePerFrame;
     tint(255, currentOpacity);
+    console.log(currentOpacity);
   } else if (duringTransition == "fadeOut") {
-    let imageTransparencyChangePerFrame = 255 / amountFramesPerShift;
+    let imageTransparencyChangePerFrame = 255 / amountFramesPerShiftFade; //
     let currentOpacity = 255 - currentFrameInTransparencyChange * imageTransparencyChangePerFrame;
     tint(255, currentOpacity);
-    console.log(currentOpacity);
   };
 
   image(logo, logoX, logoY, logoSize, logoSize);
@@ -112,14 +113,14 @@ function drawButton(buttonX,
                     changeGoToTo) {
 
   let buttonColorShiftPerFrame = {
-    r: (buttonColorHoverLoose.r - buttonColorOriginalLoose.r) / amountFramesPerShift,
-    g: (buttonColorHoverLoose.g - buttonColorOriginalLoose.g) / amountFramesPerShift,
-    b: (buttonColorHoverLoose.b - buttonColorOriginalLoose.b) / amountFramesPerShift
+    r: (buttonColorHoverLoose.r - buttonColorOriginalLoose.r) / amountFramesPerShiftElse,
+    g: (buttonColorHoverLoose.g - buttonColorOriginalLoose.g) / amountFramesPerShiftElse,
+    b: (buttonColorHoverLoose.b - buttonColorOriginalLoose.b) / amountFramesPerShiftElse
   };
   let textColorShiftPerFrame = {
-    r: (textColorHoverLoose.r - textColorOriginalLoose.r) / amountFramesPerShift,
-    g: (textColorHoverLoose.g - textColorOriginalLoose.g) / amountFramesPerShift,
-    b: (textColorHoverLoose.b - textColorOriginalLoose.b) / amountFramesPerShift
+    r: (textColorHoverLoose.r - textColorOriginalLoose.r) / amountFramesPerShiftElse,
+    g: (textColorHoverLoose.g - textColorOriginalLoose.g) / amountFramesPerShiftElse,
+    b: (textColorHoverLoose.b - textColorOriginalLoose.b) / amountFramesPerShiftElse
   };
 
   if (mouseX > buttonX 
@@ -132,7 +133,7 @@ function drawButton(buttonX,
       mouseIsPressed = false;
     };
     
-    if (frameShiftNumber < amountFramesPerShift) {
+    if (frameShiftNumber < amountFramesPerShiftElse) {
       frameShiftNumber++;
     };
   } else {
@@ -200,7 +201,7 @@ function start(viewportSize, logo, duringTransition) {
   };
   let textSizeOwn = viewportSize.totalSqrt / 16.5;
   let textFontOwn = atari;
-  let textOwn = "start";
+  let textOwn = "Start";
   let changeGoToTo = "menu";
   drawButton(buttonX, 
             buttonY, 
@@ -241,15 +242,20 @@ function draw() {
   drawCenterLine(centerBlockSize, viewportSize);
 
   if (goTo == "preStart") {
-    if (currentFrameInTransparencyChange < amountFramesPerShift) {
+    if (currentFrameInTransparencyChange < amountFramesPerShiftFade) { //
       var duringTransition = "fadeIn";
       start(viewportSize, logo, duringTransition);
+      currentFrameInTransparencyChange++;
+      if (currentFrameInTransparencyChange == amountFramesPerShiftFade) { //
+        currentFrameInTransparencyChange = 0;
+        goTo = "start"
+      };
     };
   } else if (goTo == "start") {
     duringTransition = false;
     start(viewportSize, logo, duringTransition);
   } else if (goTo = "menu") {
-    if (currentFrameInTransparencyChange < amountFramesPerShift) {
+    if (currentFrameInTransparencyChange < amountFramesPerShiftFade) { //
       duringTransition = "fadeOut";
       start(viewportSize, logo, duringTransition);
       currentFrameInTransparencyChange++;
