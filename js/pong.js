@@ -1,7 +1,7 @@
 let logoOpacity = 0;
 let clickCounter = 0;
 let frameShiftNumber = 0;
-let goTo = "Start";
+let goTo = "preStart";
 let amountFramesPerShift = 16;
 let currentFrameInTransparencyChange = 1;
 //let fpsCount = 0;
@@ -60,7 +60,11 @@ function showLogo(logo,
                   duringTransition) {
   
   tint(255, 255)
-  if (duringTransition == true) {
+  if (duringTransition == "fadeIn") {
+    let imageOpacityChangePerFrame = 255 / amountFramesPerShift;
+    let currentOpacity = 0 + currentFrameInTransparencyChange * imageOpacityChangePerFrame;
+    tint(255, currentOpacity);
+  } else if (duringTransition == "fadeOut") {
     let imageTransparencyChangePerFrame = 255 / amountFramesPerShift;
     let currentOpacity = 255 - currentFrameInTransparencyChange * imageTransparencyChangePerFrame;
     tint(255, currentOpacity);
@@ -72,8 +76,7 @@ function showLogo(logo,
   if (dist(mouseX, mouseY, logoMiddleX, logoMiddleY) < logoSize / 2 && duringTransition == false) {
     if (mouseIsPressed == true 
         && mouseButton == LEFT 
-        && clickCounter > 15 
-        && duringTransition == false) {
+        && clickCounter > 15) {
 
       window.open(logoURL, '_blank').focus();
       clickCounter = 0;
@@ -83,7 +86,7 @@ function showLogo(logo,
     if (logoOpacity < 80) {
       logoOpacity = logoOpacity + 5;
     };
-  } else {
+  } else if (duringTransition == false) {
     if (logoOpacity > 0) {
       logoOpacity = logoOpacity - 5;
     };
@@ -197,8 +200,8 @@ function start(viewportSize, logo, duringTransition) {
   };
   let textSizeOwn = viewportSize.totalSqrt / 16.5;
   let textFontOwn = atari;
-  let textOwn = "Start";
-  let changeGoToTo = "Menu";
+  let textOwn = "start";
+  let changeGoToTo = "menu";
   drawButton(buttonX, 
             buttonY, 
             buttonWidth, 
@@ -237,12 +240,17 @@ function draw() {
   let centerBlockSize = getCenterBlockSize(viewportSize);
   drawCenterLine(centerBlockSize, viewportSize);
 
-  if (goTo == "Start") {
-    let duringTransition = false;
-    start(viewportSize, logo, duringTransition);
-  } else if (goTo = "Menu") {
+  if (goTo == "preStart") {
     if (currentFrameInTransparencyChange < amountFramesPerShift) {
-      let duringTransition = true;
+      var duringTransition = "fadeIn";
+      start(viewportSize, logo, duringTransition);
+    };
+  } else if (goTo == "start") {
+    duringTransition = false;
+    start(viewportSize, logo, duringTransition);
+  } else if (goTo = "menu") {
+    if (currentFrameInTransparencyChange < amountFramesPerShift) {
+      duringTransition = "fadeOut";
       start(viewportSize, logo, duringTransition);
       currentFrameInTransparencyChange++;
     };
