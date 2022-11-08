@@ -1,6 +1,9 @@
 let logoOpacity = 0;
 let clickCounter = 0;
 let frameShiftNumber = 0;
+let goTo = "Start";
+let amountFramesPerShift = 16;
+let currentFrameInTransparencyChange = 1;
 //let fpsCount = 0;
 
 let atari;
@@ -53,12 +56,25 @@ function showLogo(logo,
                   logoSize, 
                   logoMiddleX, 
                   logoMiddleY,
-                  logoURL) {
+                  logoURL, 
+                  duringTransition) {
+  
+  tint(255, 255)
+  if (duringTransition == true) {
+    let imageTransparencyChangePerFrame = 255 / amountFramesPerShift;
+    let currentOpacity = 255 - currentFrameInTransparencyChange * imageTransparencyChangePerFrame;
+    tint(255, currentOpacity);
+    console.log(currentOpacity);
+  };
 
   image(logo, logoX, logoY, logoSize, logoSize);
   
-  if (dist(mouseX, mouseY, logoMiddleX, logoMiddleY) < logoSize / 2) {
-    if (mouseIsPressed == true && mouseButton == LEFT && clickCounter > 15) {
+  if (dist(mouseX, mouseY, logoMiddleX, logoMiddleY) < logoSize / 2 && duringTransition == false) {
+    if (mouseIsPressed == true 
+        && mouseButton == LEFT 
+        && clickCounter > 15 
+        && duringTransition == false) {
+
       window.open(logoURL, '_blank').focus();
       clickCounter = 0;
       mouseIsPressed = false;
@@ -88,8 +104,9 @@ function drawButton(buttonX,
                     textColorHoverLoose, 
                     textSizeOwn, 
                     textFontOwn, 
-                    textOwn,
-                    amountFramesPerShift) {
+                    textOwn, 
+                    duringTransition, 
+                    changeGoToTo) {
 
   let buttonColorShiftPerFrame = {
     r: (buttonColorHoverLoose.r - buttonColorOriginalLoose.r) / amountFramesPerShift,
@@ -106,6 +123,11 @@ function drawButton(buttonX,
       && mouseX < buttonX + buttonWidth 
       && mouseY > buttonY 
       && mouseY < buttonY + buttonHeight) {
+    
+    if (mouseIsPressed == true && mouseButton == LEFT) {
+      goTo = changeGoToTo;
+      mouseIsPressed = false;
+    };
     
     if (frameShiftNumber < amountFramesPerShift) {
       frameShiftNumber++;
@@ -138,7 +160,7 @@ function drawButton(buttonX,
   text(textOwn, buttonX, buttonY, buttonWidth, buttonHeight);
 }
 
-function start(viewportSize, logo) {
+function start(viewportSize, logo, duringTransition) {
   let logoSize = viewportSize.totalSqrt / 5.5;
   let logoX = viewportSize.width / 2 - logoSize / 2;
   let logoY = viewportSize.height / 3 - logoSize / 2;
@@ -146,7 +168,7 @@ function start(viewportSize, logo) {
   let logoMiddleY = viewportSize.height / 3;
   let logoURL = "https://github.com/matthias020/pong-v2/";
   clickCounter++;
-  showLogo(logo, logoX, logoY, logoSize, logoMiddleX, logoMiddleY, logoURL);
+  showLogo(logo, logoX, logoY, logoSize, logoMiddleX, logoMiddleY, logoURL, duringTransition);
 
   let buttonWidth = viewportSize.width / 4;
   let buttonHeight = viewportSize.height / 6;
@@ -176,7 +198,7 @@ function start(viewportSize, logo) {
   let textSizeOwn = viewportSize.totalSqrt / 16.5;
   let textFontOwn = atari;
   let textOwn = "Start";
-  let amountFramesPerShift = 16;
+  let changeGoToTo = "Menu";
   drawButton(buttonX, 
             buttonY, 
             buttonWidth, 
@@ -188,8 +210,9 @@ function start(viewportSize, logo) {
             textColorHoverLoose, 
             textSizeOwn, 
             textFontOwn, 
-            textOwn,
-            amountFramesPerShift);
+            textOwn, 
+            duringTransition,
+            changeGoToTo);
 }
 
 
@@ -214,5 +237,14 @@ function draw() {
   let centerBlockSize = getCenterBlockSize(viewportSize);
   drawCenterLine(centerBlockSize, viewportSize);
 
-  start(viewportSize, logo);
+  if (goTo == "Start") {
+    let duringTransition = false;
+    start(viewportSize, logo, duringTransition);
+  } else if (goTo = "Menu") {
+    if (currentFrameInTransparencyChange < amountFramesPerShift) {
+      let duringTransition = true;
+      start(viewportSize, logo, duringTransition);
+      currentFrameInTransparencyChange++;
+    };
+  };
 }
