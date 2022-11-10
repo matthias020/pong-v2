@@ -48,7 +48,7 @@ function drawCenterLine(centerBlockSize, viewportSize) {
   while (currentBlockY < viewportSize.height) {
     rect(centerLineX, currentBlockY, centerBlockSize.width, centerBlockSize.height);
     currentBlockY = currentBlockY + centerBlockSize.height * 2;
-  };
+  }
 }
 
 function showLogo(logo, 
@@ -60,7 +60,7 @@ function showLogo(logo,
                   logoURL, 
                   duringTransition) {
   
-  tint(255, 255)
+  tint(255, 255);
   if (duringTransition == "fadeIn") {
     let imageOpacityChangePerFrame = 255 / amountFramesPerShiftFade; //
     let currentOpacity = 0 + currentFrameInTransparencyChange * imageOpacityChangePerFrame;
@@ -70,7 +70,7 @@ function showLogo(logo,
     let imageTransparencyChangePerFrame = 255 / amountFramesPerShiftFade; //
     let currentOpacity = 255 - currentFrameInTransparencyChange * imageTransparencyChangePerFrame;
     tint(255, currentOpacity);
-  };
+  }
 
   image(logo, logoX, logoY, logoSize, logoSize);
   
@@ -82,16 +82,16 @@ function showLogo(logo,
       window.open(logoURL, '_blank').focus();
       clickCounter = 0;
       mouseIsPressed = false;
-    };
+    }
 
     if (logoOpacity < 80) {
       logoOpacity = logoOpacity + 5;
-    };
+    }
   } else if (duringTransition == false) {
     if (logoOpacity > 0) {
       logoOpacity = logoOpacity - 5;
-    };
-  };
+    }
+  }
 
   fill(0, 0, 0, logoOpacity);
   circle(logoMiddleX, logoMiddleY, logoSize);
@@ -131,16 +131,16 @@ function drawButton(buttonX,
     if (mouseIsPressed == true && mouseButton == LEFT) {
       goTo = changeGoToTo;
       mouseIsPressed = false;
-    };
+    }
     
     if (frameShiftNumber < amountFramesPerShiftElse) {
       frameShiftNumber++;
-    };
+    }
   } else {
     if (frameShiftNumber > 0) {
       frameShiftNumber--;
-    };
-  };
+    }
+  }
 
   let buttonColorLoose = {
     r: buttonColorOriginalLoose.r + buttonColorShiftPerFrame.r * frameShiftNumber,
@@ -236,7 +236,7 @@ function draw() {
   //if (fpsCount == 20) {
   //  text("FPS: " + fps.toFixed(2), 10, height - 50);
   //  fpsCount = 0;
-  //};
+  //}
 
   let centerBlockSize = getCenterBlockSize(viewportSize);
   drawCenterLine(centerBlockSize, viewportSize);
@@ -248,9 +248,9 @@ function draw() {
       currentFrameInTransparencyChange++;
       if (currentFrameInTransparencyChange == amountFramesPerShiftFade) { //
         currentFrameInTransparencyChange = 0;
-        goTo = "start"
-      };
-    };
+        goTo = "start";
+      }
+    }
   } else if (goTo == "start") {
     duringTransition = false;
     start(viewportSize, logo, duringTransition);
@@ -259,6 +259,6 @@ function draw() {
       duringTransition = "fadeOut";
       start(viewportSize, logo, duringTransition);
       currentFrameInTransparencyChange++;
-    };
-  };
+    }
+  }
 }
