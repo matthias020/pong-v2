@@ -5,37 +5,53 @@ function preload() {
   logoImage = loadImage("icons/pongiconnoback.png");
 }
 
+let conf;
+let globalVars;
+function setup() {
+  conf = {
+    amountFramesTransition: 16, //
+    defaultColor: 255,
 
-let conf = {
-  amountFramesTransition: 16,
-  defaultColor: color(255),
+    logo: {
+      image: logoImage, //
+      URL: "https://github.com/matthias020/pong-v2/" //
+    },
 
-  logo: {
-    image: logoImage,
-    URL: "https://github.com/matthias020/pong-v2/"
-  },
+    button: {
+      cornerRadius: 10, //
+      color: {r: 255, g: 255, b: 255},
+      colorHover: {r: 0, g: 0, b: 0},
+      text: "Start",
+      textColor: {r: 0, g: 0, b: 0},
+      textColorHover: {r: 255, g: 255, b: 255},
+      textFont: atariFont,
+      link: "exitStart"
+    }
+  };
+  conf.opacityStep = 255 / conf.amountFramesTransition;
 
-  button: {
-    cornerRadius: 10,
-    color: {r: 255, g: 255, b: 255},
-    colorHover: {r: 0, g: 0, b: 0},
-    text: "Start",
-    textColor: {r: 0, g: 0, b: 0},
-    textColorHover: {r: 255, g: 255, b: 255},
-    textFont: atariFont,
-    link: "menu"
-  }
-};
+  globalVars = {
+    goTo: "initCenterLine",
+    transitionFrame: 0,
 
-conf.opacityStep = 255 / conf.amountFramesTransition;
+    logo: {
+      overlayOpacity: 0,
+      clickDisableCount: 0
+    },
 
-let logoOpacity = 0;
-let clickCounter = 0;
-let frameShiftNumber = 0;
-let goTo = "initCenterLine";
-let currentFrameInTransparencyChange = 1;
-let amountFramesPerShiftFade = 16; //
-let amountFramesPerShiftElse = 16; //
+    button: {
+      transitionFrame: 0
+    }
+  };
+}
+
+//let logoOpacity = 0;
+//let clickCounter = 0;
+//let transitionFrame = 0;
+//let goTo = "initCenterLine";
+//let currentFrameInTransparencyChange = 1;
+//let amountFramesPerShiftFade = 16; //
+//let amountFramesPerShiftElse = 16; //
 //let fpsCount = 0;
 
 
@@ -68,8 +84,7 @@ function getCenterBlockSize(viewportSize) {
 }
 function drawCenterLine(centerBlockSize, viewportSize, duringTransition) {
   if (duringTransition == "fadeIn") {
-    let centerLineOpacityChangePerFrame = 255 / amountFramesPerShiftFade; //
-    let currentOpacity = currentFrameInTransparencyChange * centerLineOpacityChangePerFrame;
+    let currentOpacity = globalVars.transitionFrame * conf.opacityStep;
     fill(255, 255, 255, currentOpacity);
     console.log("centerLine: " + currentOpacity);
   }
@@ -83,7 +98,7 @@ function drawCenterLine(centerBlockSize, viewportSize, duringTransition) {
   }
 }
 
-function showLogo(logo, 
+function showLogo(logoImage, 
                   logoX, 
                   logoY, 
                   logoSize, 
@@ -94,39 +109,37 @@ function showLogo(logo,
   
   tint(255, 255);
   if (duringTransition == "fadeIn") {
-    let imageOpacityChangePerFrame = 255 / amountFramesPerShiftFade;
-    let currentOpacity = currentFrameInTransparencyChange * imageOpacityChangePerFrame;
+    let currentOpacity = globalVars.transitionFrame * conf.opacityStep;
     tint(255, currentOpacity);
     console.log("Logo: " + currentOpacity);
   } else if (duringTransition == "fadeOut") {
-    let imageTransparencyChangePerFrame = 255 / amountFramesPerShiftFade;
-    let currentOpacity = 255 - currentFrameInTransparencyChange * imageTransparencyChangePerFrame;
+    let currentOpacity = 255 - globalVars.transitionFrame * conf.opacityStep;
     tint(255, currentOpacity);
     console.log("Logo: " + currentOpacity);
   }
 
-  image(logo, logoX, logoY, logoSize, logoSize);
+  image(logoImage, logoX, logoY, logoSize, logoSize);
   
   if (dist(mouseX, mouseY, logoMiddleX, logoMiddleY) < logoSize / 2 && duringTransition == false) {
     if (mouseIsPressed == true 
         && mouseButton == LEFT 
-        && clickCounter > 15) {
+        && globalVars.logo.clickDisableCount > 15) {
 
       window.open(logoURL, '_blank').focus();
-      clickCounter = 0;
+      globalVars.logo.clickDisableCount = 0;
       mouseIsPressed = false;
     }
 
-    if (logoOpacity < 80 && duringTransition == false) {
-      logoOpacity = logoOpacity + 5;
+    if (globalVars.logo.overlayOpacity < 80 && duringTransition == false) {
+      globalVars.logo.overlayOpacity += 5;
     }
   } else {
-    if (logoOpacity > 0 && duringTransition == false) {
-      logoOpacity = logoOpacity - 5;
+    if (globalVars.logo.overlayOpacity > 0 && duringTransition == false) {
+      globalVars.logo.overlayOpacity -= 5;
     }
   }
 
-  fill(0, 0, 0, logoOpacity);
+  fill(0, 0, 0, globalVars.logo.overlayOpacity);
   circle(logoMiddleX, logoMiddleY, logoSize);
 }
 
@@ -134,26 +147,26 @@ function drawButton(buttonX,
                     buttonY, 
                     buttonWidth, 
                     buttonHeight, 
-                    buttonColorOriginalLoose, 
-                    buttonColorHoverLoose, 
+                    buttonColorOriginal, 
+                    buttonColorHover, 
                     buttonCornerRadius, 
-                    textColorOriginalLoose, 
-                    textColorHoverLoose, 
+                    textColorOriginal, 
+                    textColorHover, 
                     textSizeOwn, 
                     textFontOwn, 
                     textOwn, 
                     duringTransition, 
                     changeGoToTo) {
 
-  let buttonColorShiftPerFrame = {
-    r: (buttonColorHoverLoose.r - buttonColorOriginalLoose.r) / amountFramesPerShiftElse,
-    g: (buttonColorHoverLoose.g - buttonColorOriginalLoose.g) / amountFramesPerShiftElse,
-    b: (buttonColorHoverLoose.b - buttonColorOriginalLoose.b) / amountFramesPerShiftElse
+  let buttonTransitionPerFrame = {
+    r: (buttonColorHover.r - buttonColorOriginal.r) / conf.amountFramesTransition,
+    g: (buttonColorHover.g - buttonColorOriginal.g) / conf.amountFramesTransition,
+    b: (buttonColorHover.b - buttonColorOriginal.b) / conf.amountFramesTransition
   };
-  let textColorShiftPerFrame = {
-    r: (textColorHoverLoose.r - textColorOriginalLoose.r) / amountFramesPerShiftElse,
-    g: (textColorHoverLoose.g - textColorOriginalLoose.g) / amountFramesPerShiftElse,
-    b: (textColorHoverLoose.b - textColorOriginalLoose.b) / amountFramesPerShiftElse
+  let textTransitionPerFrame = {
+    r: (textColorHover.r - textColorOriginal.r) / conf.amountFramesTransition,
+    g: (textColorHover.g - textColorOriginal.g) / conf.amountFramesTransition,
+    b: (textColorHover.b - textColorOriginal.b) / conf.amountFramesTransition
   };
 
   if (mouseX > buttonX 
@@ -162,61 +175,58 @@ function drawButton(buttonX,
       && mouseY < buttonY + buttonHeight) {
     
     if (mouseIsPressed == true && mouseButton == LEFT) {
-      goTo = changeGoToTo;
+      globalVars.goTo = changeGoToTo;
       mouseIsPressed = false;
     }
     
-    if (frameShiftNumber < amountFramesPerShiftElse && duringTransition == false) {
-      frameShiftNumber++;
+    if (globalVars.button.transitionFrame < conf.amountFramesTransition && duringTransition == false) {
+      globalVars.button.transitionFrame++;
     }
   } else {
-    if (frameShiftNumber > 0 && duringTransition == false) {
-      frameShiftNumber--;
+    if (globalVars.button.transitionFrame > 0 && duringTransition == false) {
+      globalVars.button.transitionFrame--;
     }
   }
 
   let currentOpacity = 255;
   if (duringTransition == "fadeIn") {
-    let buttonOpacityChangePerFrame = 255 / amountFramesPerShiftFade;
-    currentOpacity = currentFrameInTransparencyChange * buttonOpacityChangePerFrame;
+    currentOpacity = globalVars.transitionFrame * conf.opacityStep;
     console.log("button: " + currentOpacity);
   } else if (duringTransition == "fadeOut") {
-    let buttonTransparencyChangePerFrame = 255 / amountFramesPerShiftFade;
-    currentOpacity = 255 - currentFrameInTransparencyChange * buttonTransparencyChangePerFrame;
+    currentOpacity = 255 - globalVars.transitionFrame * conf.opacityStep;
     console.log("button: " + currentOpacity);
   }
 
-  let buttonColorLoose = {
-    r: buttonColorOriginalLoose.r + buttonColorShiftPerFrame.r * frameShiftNumber,
-    g: buttonColorOriginalLoose.g + buttonColorShiftPerFrame.g * frameShiftNumber,
-    b: buttonColorOriginalLoose.b + buttonColorShiftPerFrame.b * frameShiftNumber
+  let buttonColor = {
+    r: buttonColorOriginal.r + buttonTransitionPerFrame.r * globalVars.button.transitionFrame,
+    g: buttonColorOriginal.g + buttonTransitionPerFrame.g * globalVars.button.transitionFrame,
+    b: buttonColorOriginal.b + buttonTransitionPerFrame.b * globalVars.button.transitionFrame
   };
-  let buttonColor = color(buttonColorLoose.r, buttonColorLoose.g, buttonColorLoose.b, currentOpacity);
-  let textColorLoose = {
-    r: textColorOriginalLoose.r + textColorShiftPerFrame.r * frameShiftNumber,
-    g: textColorOriginalLoose.g + textColorShiftPerFrame.g * frameShiftNumber,
-    b: textColorOriginalLoose.b + textColorShiftPerFrame.b * frameShiftNumber
+  let buttonColorReady = color(buttonColor.r, buttonColor.g, buttonColor.b, currentOpacity);
+  let textColor = {
+    r: textColorOriginal.r + textTransitionPerFrame.r * globalVars.button.transitionFrame,
+    g: textColorOriginal.g + textTransitionPerFrame.g * globalVars.button.transitionFrame,
+    b: textColorOriginal.b + textTransitionPerFrame.b * globalVars.button.transitionFrame
   };
-  let textColor = color(textColorLoose.r, textColorLoose.g, textColorLoose.b, currentOpacity);
+  let textColorReady = color(textColor.r, textColor.g, textColor.b, currentOpacity);
 
-  fill(buttonColor);
+  fill(buttonColorReady);
   rect(buttonX, buttonY, buttonWidth, buttonHeight, buttonCornerRadius);
-  fill(textColor);
+  fill(textColorReady);
   textFont(textFontOwn);
   textSize(textSizeOwn);
   textAlign(CENTER, CENTER);
   text(textOwn, buttonX, buttonY, buttonWidth, buttonHeight);
 }
 
-function start(viewportSize, logo, duringTransition) {
+function start(viewportSize, duringTransition) {
   let logoSize = viewportSize.totalSqrt / 5.5;
   let logoX = viewportSize.width / 2 - logoSize / 2;
   let logoY = viewportSize.height / 3 - logoSize / 2;
   let logoMiddleX = viewportSize.width / 2;
   let logoMiddleY = viewportSize.height / 3;
-  let logoURL = "https://github.com/matthias020/pong-v2/";
-  clickCounter++;
-  showLogo(logo, logoX, logoY, logoSize, logoMiddleX, logoMiddleY, logoURL, duringTransition);
+  globalVars.logo.clickDisableCount++;
+  showLogo(conf.logo.image, logoX, logoY, logoSize, logoMiddleX, logoMiddleY, conf.logo.URL, duringTransition);
 
   let buttonWidth = viewportSize.width / 4;
   let buttonHeight = viewportSize.height / 6;
@@ -232,7 +242,6 @@ function start(viewportSize, logo, duringTransition) {
     g: 0,
     b: 0
   };
-  let buttonCornerRadius = 10;
   let textColorOriginalLoose = {
     r: 0,
     g: 0,
@@ -244,16 +253,16 @@ function start(viewportSize, logo, duringTransition) {
     b: 255
   };
   let textSizeOwn = viewportSize.totalSqrt / 16.5;
-  let textFontOwn = atari;
+  let textFontOwn = atariFont;
   let textOwn = "Start";
-  let changeGoToTo = "menu";
+  let changeGoToTo = "exitStart";
   drawButton(buttonX, 
             buttonY, 
             buttonWidth, 
             buttonHeight, 
             buttonColorOriginalLoose, 
             buttonColorHoverLoose, 
-            buttonCornerRadius, 
+            conf.button.cornerRadius, 
             textColorOriginalLoose, 
             textColorHoverLoose, 
             textSizeOwn, 
@@ -262,7 +271,6 @@ function start(viewportSize, logo, duringTransition) {
             duringTransition,
             changeGoToTo);
 }
-
 
 function draw() {
   clear();
@@ -284,37 +292,37 @@ function draw() {
   //}
 
   let centerBlockSize = getCenterBlockSize(viewportSize);
-  if (goTo != "initCenterLine") {
+  if (globalVars.goTo != "initCenterLine") {
     let duringTransition = false;
     drawCenterLine(centerBlockSize, viewportSize, duringTransition);
   }
 
-  if (goTo == "initCenterLine") {
+  if (globalVars.goTo == "initCenterLine") {
     let duringTransition = "fadeIn";
     drawCenterLine(centerBlockSize, viewportSize, duringTransition);
-    currentFrameInTransparencyChange++;
-    if (currentFrameInTransparencyChange == amountFramesPerShiftFade) {
-      currentFrameInTransparencyChange = 1;
-      goTo = "initStart";
+    if (globalVars.transitionFrame == conf.amountFramesTransition) {
+      globalVars.transitionFrame = 1;
+      globalVars.goTo = "initStart";
     }
-  } else if (goTo == "initStart") {
+    globalVars.transitionFrame++;
+  } else if (globalVars.goTo == "initStart") {
     let duringTransition = "fadeIn";
-    start(viewportSize, logo, duringTransition);
-    currentFrameInTransparencyChange++;
-    if (currentFrameInTransparencyChange == amountFramesPerShiftFade) {
-      currentFrameInTransparencyChange = 1;
-      goTo = "start";
+    start(viewportSize, duringTransition);
+    if (globalVars.transitionFrame == conf.amountFramesTransition) {
+      globalVars.transitionFrame = 1;
+      globalVars.goTo = "start";
     }
-  } else if (goTo == "start") {
+    globalVars.transitionFrame++;
+  } else if (globalVars.goTo == "start") {
     let duringTransition = false;
-    start(viewportSize, logo, duringTransition);
-  } else if (goTo == "menu") {
+    start(viewportSize, duringTransition);
+  } else if (globalVars.goTo == "exitStart") {
     let duringTransition = "fadeOut";
-    start(viewportSize, logo, duringTransition);
-    currentFrameInTransparencyChange++;
-    if (currentFrameInTransparencyChange == amountFramesPerShiftFade) {
-      currentFrameInTransparencyChange = 1;
-      goTo = "next";
+    start(viewportSize, duringTransition);
+    if (globalVars.transitionFrame == conf.amountFramesTransition) {
+      globalVars.transitionFrame = 1;
+      globalVars.goTo = "next";
     }
+    globalVars.transitionFrame++;
   }
 }
