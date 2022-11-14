@@ -15,7 +15,6 @@ function setup() {
     logo: {
       image: logoImage,
       URL: "https://github.com/matthias020/pong-v2/",
-      goToIgnoreFade: ["exitStart", "initMenu"]
     },
 
     button: {
@@ -44,7 +43,8 @@ function setup() {
     },
 
     button: {
-      transitionFrame: 0
+      transitionFrame: [0,0,0],
+      goTo: ""
     }
   };
 }
@@ -91,8 +91,7 @@ function showLogo(logoImage,
                   logoURL) {
   
   tint(255, 255);
-  if (globalVars.duringTransition != false 
-      && conf.logo.goToIgnoreFade.includes(globalVars.goTo) == false) {
+  if (globalVars.duringTransition != false) {
 
     let logoCurrentOpacity = globalVars.transitionFrame * conf.opacityStep;
     if (globalVars.duringTransition == "fadeOut") {
@@ -136,7 +135,8 @@ function drawButton(buttonX,
                     buttonTextSize, 
                     buttonTextFont, 
                     buttonText, 
-                    buttonLink) {
+                    buttonLink,
+                    buttonNumber) {
 
   let buttonTransitionPerFrame = {
     r: (buttonColorHover.r - buttonColorOriginal.r) / conf.amountFramesTransition,
@@ -155,20 +155,20 @@ function drawButton(buttonX,
       && mouseY < buttonY + buttonHeight) {
     
     if (mouseIsPressed == true && mouseButton == LEFT) {
-      globalVars.goTo = buttonLink;
+      globalVars.button.goTo = buttonLink;
       mouseIsPressed = false;
     }
     
-    if (globalVars.button.transitionFrame < conf.amountFramesTransition 
+    if (globalVars.button.transitionFrame[buttonNumber] < conf.amountFramesTransition 
         && globalVars.duringTransition == false) {
-
-      globalVars.button.transitionFrame++;
+      
+      globalVars.button.transitionFrame[buttonNumber]++;
     }
   } else {
-    if (globalVars.button.transitionFrame > 0 
+    if (globalVars.button.transitionFrame[buttonNumber] > 0 
         && globalVars.duringTransition == false) {
 
-      globalVars.button.transitionFrame--;
+      globalVars.button.transitionFrame[buttonNumber]--;
     }
   }
 
@@ -182,15 +182,15 @@ function drawButton(buttonX,
   let buttonColor = {
     r: buttonColorOriginal.r 
        + buttonTransitionPerFrame.r 
-       * globalVars.button.transitionFrame,
+       * globalVars.button.transitionFrame[buttonNumber],
 
     g: buttonColorOriginal.g 
        + buttonTransitionPerFrame.g 
-       * globalVars.button.transitionFrame,
+       * globalVars.button.transitionFrame[buttonNumber],
 
     b: buttonColorOriginal.b 
        + buttonTransitionPerFrame.b 
-       * globalVars.button.transitionFrame
+       * globalVars.button.transitionFrame[buttonNumber]
   };
   let buttonColorReady = color(buttonColor.r, 
                                buttonColor.g, 
@@ -199,15 +199,15 @@ function drawButton(buttonX,
   let buttonTextColor = {
     r: buttonTextColorOriginal.r 
        + buttonTextTransitionPerFrame.r 
-       * globalVars.button.transitionFrame,
+       * globalVars.button.transitionFrame[buttonNumber],
 
     g: buttonTextColorOriginal.g 
        + buttonTextTransitionPerFrame.g 
-       * globalVars.button.transitionFrame,
+       * globalVars.button.transitionFrame[buttonNumber],
 
     b: buttonTextColorOriginal.b 
        + buttonTextTransitionPerFrame.b 
-       * globalVars.button.transitionFrame
+       * globalVars.button.transitionFrame[buttonNumber]
   };
   let buttonTextColorReady = color(buttonTextColor.r, 
                                    buttonTextColor.g, 
@@ -225,20 +225,24 @@ function drawButton(buttonX,
 }
 
 function start(viewportSize) {
-  let logoSize = viewportSize.totalSqrt / 5.5;
+  let logoSize = viewportSize.height / 3.7;
   let logoX = viewportSize.width / 2 - logoSize / 2;
-  let logoY = viewportSize.height / 3 - logoSize / 2;
-  let logoMiddleX = viewportSize.width / 2;
-  let logoMiddleY = viewportSize.height / 3;
+  let logoY = viewportSize.height / 5 - logoSize / 2;
+  let logoMiddleX = logoX + logoSize / 2;
+  let logoMiddleY = logoY + logoSize / 2;
   showLogo(conf.logo.image, logoX, logoY, logoSize, logoMiddleX, logoMiddleY, conf.logo.URL);
 
-  let buttonWidth = viewportSize.width / 4;
-  let buttonHeight = viewportSize.height / 6;
+
+  let buttonYIncrement = viewportSize.height / 30;
+  let buttonWidth = viewportSize.width / 5;
+  let buttonHeight = viewportSize.height / 7.5;
   let buttonX = viewportSize.width / 2 - buttonWidth / 2;
-  let buttonY = viewportSize.height / 4 * 3 - buttonHeight / 2;
-  let buttonTextSize = viewportSize.totalSqrt / 16.5;
-  let buttonText = "Start";
-  let buttonLink = "exitStart";
+  let buttonTextSize = viewportSize.totalSqrt / 20.5;
+
+  let buttonNumber = 0;
+  let buttonY = logoY + logoSize + buttonYIncrement * 1.9;
+  let buttonText = "1 player";
+  let buttonLink = "1Player";
   drawButton(buttonX, 
              buttonY, 
              buttonWidth, 
@@ -251,7 +255,50 @@ function start(viewportSize) {
              buttonTextSize, 
              conf.button.textFont, 
              buttonText,
-             buttonLink);
+             buttonLink,
+             buttonNumber);
+
+  buttonNumber = 1;
+  buttonY = buttonY + buttonHeight + buttonYIncrement;
+  buttonText = "2 player";
+  buttonLink = "2Player";
+  drawButton(buttonX, 
+             buttonY, 
+             buttonWidth, 
+             buttonHeight, 
+             conf.button.color, 
+             conf.button.colorHover, 
+             conf.button.cornerRadius, 
+             conf.button.textColor, 
+             conf.button.textColorHover, 
+             buttonTextSize, 
+             conf.button.textFont, 
+             buttonText,
+             buttonLink,
+             buttonNumber);
+
+  buttonNumber = 2;
+  buttonY = buttonY + buttonHeight + buttonYIncrement;
+  buttonText = "Multiplayer";
+  buttonLink = "multiplayer";
+  drawButton(buttonX, 
+             buttonY, 
+             buttonWidth, 
+             buttonHeight, 
+             conf.button.color, 
+             conf.button.colorHover, 
+             conf.button.cornerRadius, 
+             conf.button.textColor, 
+             conf.button.textColorHover, 
+             buttonTextSize, 
+             conf.button.textFont, 
+             buttonText,
+             buttonLink,
+             buttonNumber);
+  
+  if (globalVars.button.goTo != "") {
+    globalVars.goTo = "exitStart";
+  }
 }
 
 
@@ -313,9 +360,21 @@ function draw() {
       start(viewportSize);
       if (globalVars.transitionFrame == conf.amountFramesTransition) {
         globalVars.transitionFrame = 1;
-        globalVars.goTo = "initMenu";
+        if (globalVars.button.goTo == "multiplayer") {
+          globalVars.goTo = "initMultiplayerGame";
+        } else {
+          globalVars.goTo = "initLocalGame"
+        }
       }
       globalVars.transitionFrame++;
+      break;
+
+    case "initLocalGame":
+      console.log("Starting local game");
+      break;
+    
+    case "initMultiplayerGame":
+      console.log("Starting multiplayer game");
       break;
   }
 }
