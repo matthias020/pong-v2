@@ -92,7 +92,6 @@ function showLogo(logoImage,
   
   tint(255, 255);
   if (globalVars.duringTransition != false) {
-
     let logoCurrentOpacity = globalVars.transitionFrame * conf.opacityStep;
     if (globalVars.duringTransition == "fadeOut") {
       logoCurrentOpacity = 255 - logoCurrentOpacity;
