@@ -236,7 +236,7 @@ function start(viewportSize) {
   let buttonWidth = viewportSize.width / 5;
   let buttonHeight = viewportSize.height / 7.5;
   let buttonX = viewportSize.width / 2 - buttonWidth / 2;
-  let buttonTextSize = viewportSize.totalSqrt / 20.5;
+  let buttonTextSize = viewportSize.totalSqrt / 24;
 
   let buttonNumber = 0;
   let buttonY = logoY + logoSize + buttonYIncrement * 1.9;
@@ -298,6 +298,14 @@ function start(viewportSize) {
   if (globalVars.button.goTo != "") {
     globalVars.goTo = "exitStart";
   }
+}
+
+function drawBats(bat1X, bat1Y, bat1Width, bat1Height, bat2X, bat2Y, bat2Width, bat2Height) {
+
+}
+
+function localGame(viewportSize, amountPlayers) {
+  drawBats();
 }
 
 
@@ -369,7 +377,8 @@ function draw() {
       break;
 
     case "initLocalGame":
-      console.log("Starting local game");
+      globalVars.duringTransition = "fadeIn";
+      localGame(viewportSize, 0);
       break;
     
     case "initMultiplayerGame":
