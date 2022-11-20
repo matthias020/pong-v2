@@ -241,7 +241,7 @@ function start(viewportSize) {
   let buttonNumber = 0;
   let buttonY = logoY + logoSize + buttonYIncrement * 1.9;
   let buttonText = "1 player";
-  let buttonLink = "1Player";
+  let buttonLink = "1PlayerGame";
   drawButton(buttonX, 
              buttonY, 
              buttonWidth, 
@@ -260,7 +260,7 @@ function start(viewportSize) {
   buttonNumber = 1;
   buttonY = buttonY + buttonHeight + buttonYIncrement;
   buttonText = "2 player";
-  buttonLink = "2Player";
+  buttonLink = "2PlayerGame";
   drawButton(buttonX, 
              buttonY, 
              buttonWidth, 
@@ -279,7 +279,7 @@ function start(viewportSize) {
   buttonNumber = 2;
   buttonY = buttonY + buttonHeight + buttonYIncrement;
   buttonText = "Multiplayer";
-  buttonLink = "multiplayer";
+  buttonLink = "multiplayerGame";
   drawButton(buttonX, 
              buttonY, 
              buttonWidth, 
@@ -300,12 +300,24 @@ function start(viewportSize) {
   }
 }
 
-function drawBats(bat1X, bat1Y, bat1Width, bat1Height, bat2X, bat2Y, bat2Width, bat2Height) {
+function drawBats(bat1X, bat1Y, bat2X, bat2Y, batWidth, batHeight) {
+  if (globalVars.duringTransition == "fadeIn") {
+    let centerLineCurrentOpacity = globalVars.transitionFrame * conf.opacityStep;
+    fill(conf.defaultColor, centerLineCurrentOpacity);
+  }
 
+  rect(bat1X, bat1Y, batWidth, batHeight);
+  rect(bat2X, bat2Y, batWidth, batHeight);
 }
 
 function localGame(viewportSize, amountPlayers) {
-  drawBats();
+  let batWidth = viewportSize.width / 175;
+  let batHeight = viewportSize.height / 5;
+  let bat1X = viewportSize.width / 45.5;
+  let bat1Y = viewportSize.height / 2 - batHeight / 2;
+  let bat2X = viewportSize.width - viewportSize.width / 45.5 - batWidth;
+  let bat2Y = viewportSize.height / 2 - batHeight / 2;
+  drawBats(bat1X, bat1Y, bat2X, bat2Y, batWidth, batHeight);
 }
 
 
@@ -370,7 +382,7 @@ function draw() {
         if (globalVars.button.goTo == "multiplayer") {
           globalVars.goTo = "initMultiplayerGame";
         } else {
-          globalVars.goTo = "initLocalGame"
+          globalVars.goTo = "initLocalGame";
         }
       }
       globalVars.transitionFrame++;
@@ -379,10 +391,21 @@ function draw() {
     case "initLocalGame":
       globalVars.duringTransition = "fadeIn";
       localGame(viewportSize, 0);
+      if (globalVars.transitionFrame == conf.amountFramesTransition) {
+        globalVars.transitionFrame = 1;
+        globalVars.goTo = globalVars.button.goTo;
+      }
+      globalVars.transitionFrame++;
       break;
     
     case "initMultiplayerGame":
       console.log("Starting multiplayer game");
+      break;
+    
+    case "2PlayerGame":
+      globalVars.duringTransition = false;
+      localGame(viewportSize, 2);
+      console.log("2player");
       break;
   }
 }
