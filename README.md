@@ -9,7 +9,7 @@ You can find the source code [here](https://github.com/matthias020/pong-v2/ "Git
 
 This game needs to run on a (local) webserver such as Apache for it to work. This is due to Cross-Origin Resource Sharing (CORS) restrictions.
 
-A tutorial on how to install and set up Apache for Linux systems can be found [here](https://www.makeuseof.com/tag/set-apache-web-server-3-easy-steps "makeuseof.com").
+A tutorial on how to install and set up Apache for Linux systems can be found [here](https://www.makeuseof.com/tag/set-apache-web-server-3-easy-steps "makeuseof.com").  
 A tutorial on how to install and set up Apache for Windows can be found [here](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Install-Apache-Web-Server-24-Windows-10-ServerRoot-Error "theserverside.com").
 
 After finishing the tutorial for your system, the default `/var/www/html/index.html` file can be deleted and the contents of this project can then be copied into the `/var/www/html/` folder. In Windows, this folder can be found at `C:\Apache24\htdocs\`.
