@@ -3,7 +3,7 @@ let globalVarsOriginal;
 let globalVars;
 function setup() {
   conf = {
-    amountFramesAnimations: 16, // Amount of frames every animation takes
+    amountFramesAnimations: 255, // Amount of frames every animation takes
     defaultColor: 255,
     textFont: atariFont,
 
@@ -27,9 +27,11 @@ function setup() {
     },
 
     game: {
-      standardizedWidth: 8000, // Absolute screen dimensions for window resize and online play support
-      standardizedHeight: 4500,
-      batSpeed: 110,
+      standardizedWidth: 10000, // Absolute screen dimensions for window resize and online play support
+      standardizedHeight: 10000,
+      batSpeed: 244,
+      ballStartingSpeed: 60,
+      ballMaxStartingAngleDeg: 45,
     },
 
     score: {
@@ -77,6 +79,7 @@ function setup() {
     game: {
       gameMode: "", // 1PlayerGame, 2PlayerGame, or multiplayerGame after user chooses gamemode
       startGame: false,
+      firstSide: false,
     },
 
     bats: {
@@ -94,8 +97,11 @@ function setup() {
     },
 
     ball: {
-      x: conf.game.standardizedWidth / 2,
-      y: conf.game.standardizedHeight / 2,
+      ballX: conf.game.standardizedWidth / 2,
+      ballY: conf.game.standardizedHeight / 2,
+      duringFadeAnimation: false,
+      speed: false,
+      angleDeg: false,
     },
   };
   globalVars = globalVarsOriginal;

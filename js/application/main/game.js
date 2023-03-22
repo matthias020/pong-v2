@@ -36,6 +36,25 @@ function game(viewportSize, gameMode) {
   drawBats(bat1X, bat2X, bat1YForDraw, bat2YForDraw, batWidth, batHeight);
 
 
+  if (globalVars.game.startGame == true && globalVars.button.duringFadeAnimation == false) {
+    let ballSize = viewportSize.totalSqrt / 60;
+
+    let ballXForDraw = globalVars.ball.ballX / scaleFactor.width;
+    let ballYForDraw = globalVars.ball.ballY / scaleFactor.height;
+    drawBall(ballXForDraw, ballYForDraw, ballSize);
+
+    if (globalVars.ball.duringFadeAnimation == "fadeIn") {
+      //console.log(globalVars.global.amountFramesAnimations);
+      if (globalVars.global.fadeAnimationFrame < conf.amountFramesAnimations * 2) {
+        globalVars.global.fadeAnimationFrame++;
+      } else {
+        globalVars.ball.duringFadeAnimation = false;
+        globalVars.global.fadeAnimationFrame = 1;
+      }
+    }
+  }
+
+
   // If game not started or button in fade out animation
   if (globalVars.game.startGame == false || globalVars.button.duringFadeAnimation == "fadeOut") {
     // Draw "start game" button
@@ -84,7 +103,8 @@ function game(viewportSize, gameMode) {
                globalVars.global.fadeAnimationFrame == conf.amountFramesAnimations - 1) {
 
       globalVars.button.duringFadeAnimation = false;
-      globalVars.global.fadeAnimationFrame = 1;
+      globalVars.global.fadeAnimationFrame = 0;
+      globalVars.ball.duringFadeAnimation = "fadeIn";
     }
   }
 
@@ -92,6 +112,7 @@ function game(viewportSize, gameMode) {
   // If not in animation and game started use configured keybinds (see setup.js: conf.controls) to move bats
   if (globalVars.global.duringFadeAnimation == false && 
       globalVars.button.duringFadeAnimation == false && 
+      globalVars.ball.duringFadeAnimation == false &&
       globalVars.game.startGame == true) {
     
     // If right bat not yet at top of screen
@@ -152,5 +173,8 @@ function game(viewportSize, gameMode) {
       }
       //
     }
+
+
+    globalVars.ball.ballX += conf.game.ballStartingSpeed;
   }
 }

@@ -4,12 +4,12 @@ function draw() {
 
 
   // For debugging
-  /*
-  if (globalVars.global.frameCount <= 1300) {
-    console.log("Framecount: " + globalVars.global.frameCount)
-    globalVars.global.frameCount++
+  
+  if (globalVars.global.frameCount <= 2000) {
+    console.log("Framecount: " + globalVars.global.frameCount);
+    console.log(globalVars.global.fadeAnimationFrame);
+    globalVars.global.frameCount++;
   }
-  */
 
 
   // Check performance
@@ -116,8 +116,9 @@ function draw() {
       game(viewportSize, false);
 
       if (globalVars.global.fadeAnimationFrame == conf.amountFramesAnimations - 1) {
-        globalVars.global.fadeAnimationFrame = 0;
+        globalVars.global.fadeAnimationFrame = 1;
         globalVars.global.goTo = "game";
+        prepareGame();
       } else {
         globalVars.global.fadeAnimationFrame++;
       }
