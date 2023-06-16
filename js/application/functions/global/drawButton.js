@@ -125,11 +125,12 @@ function drawButton(buttonX,
   // For debugging
   /*
   if (buttonID == 3 || buttonID == 0) {
-    console.log(buttonID + ", " + buttonCurrentOpacity);
+    //console.log(buttonID + ", " + buttonCurrentOpacity);
+    console.log(buttonID + ", " + buttonTextColorReady);
   }
   */
 
   
-  // Return if button clicked true else false
+  // Return if button clicked: true, else false
   return returnValue;
 }

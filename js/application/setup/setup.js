@@ -3,7 +3,7 @@ let globalVarsOriginal;
 let globalVars;
 function setup() {
   conf = {
-    amountFramesAnimations: 255, // Amount of frames every animation takes
+    amountFramesAnimations: 3, // Amount of frames every animation takes
     defaultColor: 255,
     textFont: atariFont,
 
@@ -55,10 +55,15 @@ function setup() {
 
   globalVarsOriginal = {
     global: {
-      goTo: "initCenterLine", // goTo decides what block of code is executed. See the switch statement in pong.js
+      goTo: "fadeInCenterLine", // goTo decides what block of code is executed. See the switch statement in pong.js
       fadeAnimationFrame: 1, // Current frame in amountFramesAnimation (fadeIn fadeOut animation)
-      duringFadeAnimation: false, // Determines if currently in a fadeIn or fadeOut animation or not
+      duringFadeAnimation: "fadeIn", // Determines if currently in a fadeIn or fadeOut animation or not
       frameCount: 1, // For debugging
+    },
+
+    fadeAnimations: {
+      centerLineOpacity: 0,
+      startScreenOpacity: 0,
     },
 
     performance: {
@@ -79,7 +84,7 @@ function setup() {
     game: {
       gameMode: "", // 1PlayerGame, 2PlayerGame, or multiplayerGame after user chooses gamemode
       startGame: false,
-      firstSide: false,
+      firstSide: 0,
     },
 
     bats: {
@@ -100,8 +105,8 @@ function setup() {
       ballX: conf.game.standardizedWidth / 2,
       ballY: conf.game.standardizedHeight / 2,
       duringFadeAnimation: false,
-      speed: false,
-      angleDeg: false,
+      speed: 0,
+      angleDeg: 0,
     },
   };
   globalVars = globalVarsOriginal;
