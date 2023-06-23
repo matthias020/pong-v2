@@ -1,5 +1,5 @@
 function draw() {
-  sleep(1000)
+  //sleep(500);
 
   // Clear drawings of previous frame
   clear();
@@ -43,7 +43,7 @@ function draw() {
   fill(conf.defaultColor);
   noStroke();
 
-
+  animations();
 
   // Go to current step in program
   switch (globalVars.global.goTo) {
@@ -84,6 +84,4 @@ function draw() {
       game(viewportSize, globalVars.game.gameMode);
       break;
   }
-
-  animations();
 }

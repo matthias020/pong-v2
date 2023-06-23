@@ -3,7 +3,7 @@ let globalVarsOriginal;
 let globalVars;
 function setup() {
   conf = {
-    amountFramesAnimations: 3, // Amount of frames every animation takes
+    amountFramesAnimations: 30, // Amount of frames every animation takes
     defaultColor: 255,
     textFont: atariFont,
 
@@ -62,8 +62,9 @@ function setup() {
     },
 
     fadeAnimations: {
-      centerLineOpacity: 0,
-      startScreenOpacity: 0,
+      centerLineOpacity: 255,
+      startScreenOpacity: 255,
+      gameOpacity: 255,
     },
 
     performance: {

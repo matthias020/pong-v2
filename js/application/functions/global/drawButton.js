@@ -11,28 +11,16 @@ function drawButton(buttonX,
                     buttonText, 
                     buttonID,
                     amountFramesAnimation,
-                    opacityStep) {
+                    opacity) {
   
   // Value when button not clicked
   let returnValue = false;
   
 
   // Default opacity 100%
-  let buttonCurrentOpacity = 255;
 
   // When in fadeIn animation increase button opacity
-  if (globalVars.global.duringFadeAnimation == "fadeIn") { 
-    buttonCurrentOpacity = globalVars.global.fadeAnimationFrame * opacityStep;
-
-  // When in fadeOut animation decrease button opacity
-  } else if (globalVars.global.duringFadeAnimation == "fadeOut" || 
-             globalVars.button.duringFadeAnimation == "fadeOut") { 
-              
-    buttonCurrentOpacity = 255 - globalVars.global.fadeAnimationFrame * opacityStep;
-
-
-  // If not in fadeIn or fadeOut animation
-  } else {
+  if (opacity == 255) {
     if (mouseX > buttonX &&
         mouseX < buttonX + buttonWidth &&
         mouseY > buttonY &&
@@ -89,7 +77,7 @@ function drawButton(buttonX,
   let buttonColorReady = color(buttonColor.r, 
                                buttonColor.g, 
                                buttonColor.b, 
-                               buttonCurrentOpacity);
+                               opacity);
 
   // See previous comment but for button text
   let buttonTextColor = {
@@ -108,7 +96,7 @@ function drawButton(buttonX,
   let buttonTextColorReady = color(buttonTextColor.r, 
                                    buttonTextColor.g, 
                                    buttonTextColor.b, 
-                                   buttonCurrentOpacity);
+                                   opacity);
 
 
   // Apply button color and draw button

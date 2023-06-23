@@ -39,7 +39,7 @@ function start(viewportSize, opacity) {
 										  buttonText,
 										  buttonID,
 										  conf.amountFramesAnimations,
-										  conf.opacityStep);
+										  opacity);
   
 	buttonID = 1;
 	buttonY = buttonY + buttonHeight + buttonYIncrement;
@@ -57,7 +57,7 @@ function start(viewportSize, opacity) {
 										  buttonText,
 										  buttonID,
 										  conf.amountFramesAnimations,
-										  conf.opacityStep);
+										  opacity);
   
 	buttonID = 2;
 	buttonY = buttonY + buttonHeight + buttonYIncrement;
@@ -75,7 +75,7 @@ function start(viewportSize, opacity) {
 										  buttonText,
 										  buttonID,
 										  conf.amountFramesAnimations,
-										  conf.opacityStep);
+										  opacity);
 	
 	// Set gamemode according to wich button was clicked (if a button was clicked)
 	if (buttonResponse[0] == true) {
